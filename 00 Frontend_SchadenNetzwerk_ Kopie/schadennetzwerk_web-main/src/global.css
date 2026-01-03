@@ -1,0 +1,51 @@
+/* scrollbar */
+@import 'simplebar-react/dist/simplebar.min.css';
+
+/* lazy image */
+@import 'react-lazy-load-image-component/src/effects/blur.css';
+
+/* map */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
+/* editor */
+@import 'react-quill/dist/quill.snow.css';
+
+/* carousel */
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
+
+/* lightbox */
+@import 'yet-another-react-lightbox/styles.css';
+@import 'yet-another-react-lightbox/plugins/captions.css';
+@import 'yet-another-react-lightbox/plugins/thumbnails.css';
+
+/* pdf viewer */
+/* @import 'react-pdf-viewer/core/lib/styles/index.css';
+@import 'react-pdf-viewer/default-layout/lib/styles/index.css'; */
+
+.terms-ol {
+  list-style-type: none;
+  counter-reset: item;
+  margin: 0;
+  padding: 0;
+}
+
+.terms-ol>li {
+  display: table;
+  counter-increment: item;
+  margin-bottom: 0.6em;
+}
+
+.terms-ol>li:before {
+  content: counters(item, ".") ". ";
+  display: table-cell;
+  padding-right: 0.6em;
+}
+
+.terms-li ol>li {
+  margin: 0;
+}
+
+.terms-li ol>li:before {
+  content: counters(item, ".") " ";
+}
