@@ -28,7 +28,7 @@ import {
   COLLECTION_APPRAISER_INFO,
   APPRAISER_INFO_DETAIL_COMPLETE_EMAIL,
   ORDER_RECEIVED_CONTENT_SID,
-  DAMAGE_LINKS_CONTENT_SID,
+  DAMAGE_LINKS_CONTENT_WITHOUT_SID,
   DAMAGE_FILE_UPLOAD_NOTIFICATION,
   COLLECTION_REPAIR_DOCUMENTS,
   COLLECTION_AGENT,
@@ -955,12 +955,11 @@ export const modifyDamage = onDocumentWritten(`${COLLECTION_DAMAGE}/{damageId}`,
           3: dayjs(newInfo.damageDate.toDate()).format("DD.MM.YYYY"),
           4: links,
           // 5:`https://app.schadennetzwerk.com/damage-overview/${newInfo.damageId}`,
-          5: "",
         };
         if (newInfo.customerWhatsapp) {
-          await sendWhatsAppSMS(DAMAGE_LINKS_CONTENT_SID, newInfo.customerWhatsapp, textContent);
+          await sendWhatsAppSMS(DAMAGE_LINKS_CONTENT_WITHOUT_SID, newInfo.customerWhatsapp, textContent);
         } else {
-          await sendSMS(DAMAGE_LINKS_CONTENT_SID, newInfo.customerPhone, textContent);
+          await sendSMS(DAMAGE_LINKS_CONTENT_WITHOUT_SID, newInfo.customerPhone, textContent);
         }
       }
       // Send delayed email to the customer if willSendDelayedReminder is true

@@ -234,4 +234,5 @@ export const WORKSHOP_ROLES = [UserRole.Owner, UserRole.ServiceAdviser];
 export const ORDER_RECEIVED_CONTENT_SID = "HXe4d8a48b5823ceb4b45d91f51bc2e408";
 export const WELCOME_CONTENT_SID = "HX48fd3001acd3af14a0121772511cfb39";
 export const DAMAGE_LINKS_CONTENT_SID = "HX66783748fdb621bb92f46cbf5351f0af";
+export const DAMAGE_LINKS_CONTENT_WITHOUT_SID = "HX23506532baf5ec5fa46c7ecea39cae2d";
 export const INSURANCE_BROKER_CREATED = "HXb13f99c703b69c6a3288d32a5dea914a";
