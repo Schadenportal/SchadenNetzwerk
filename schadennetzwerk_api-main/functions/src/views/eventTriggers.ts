@@ -954,8 +954,8 @@ export const modifyDamage = onDocumentWritten(`${COLLECTION_DAMAGE}/{damageId}`,
           2: newInfo.tortfeasorVehicleLicensePlate,
           3: dayjs(newInfo.damageDate.toDate()).format("DD.MM.YYYY"),
           4: links,
-          //5: `https://app.schadennetzwerk.com/damage-overview/${newInfo.damageId}`,
-          5: ``
+          // 5:`https://app.schadennetzwerk.com/damage-overview/${newInfo.damageId}`,
+          5: "",
         };
         if (newInfo.customerWhatsapp) {
           await sendWhatsAppSMS(DAMAGE_LINKS_CONTENT_SID, newInfo.customerWhatsapp, textContent);
