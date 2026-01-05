@@ -1,6 +1,6 @@
 {
   "LOGIN": "---------------------------------------------------------------------------------------------------------------------",
-  "welcome_back": "Welcome back to SchadenNetzwerk",
+  "welcome_back": "Willkommen im SchadenNetzwerk",
   "sign_in_to_schadennetzwerk": "Sign in to SchadenNetzwerk",
   "new_user": "New user?",
   "create_an_account": "Create an account",
@@ -524,7 +524,7 @@
   "select_damage": "Select Damage",
   "damage_info": "Damage Info",
   "home_title": "Welcome back to the SchadenNetzwerk!",
-  "home_desc_normal": "Welcome back to SchadenNetzwerk - your legal service provider for successful damage management. At SchadenNetzwerk, we tirelessly work to make your job not only more pleasant but also more effective and relaxed. By using our platform and our professional damage management, our users report an average time ",
+  "home_desc_normal": "Willkommen im SchadenNetzwerk - your legal service provider for successful damage management. At SchadenNetzwerk, we tirelessly work to make your job not only more pleasant but also more effective and relaxed. By using our platform and our professional damage management, our users report an average time ",
   "home_desc_bold": "",
   "home_greeting": "We look forward to your feedback. \nYour team at SchadenNetzwerk",
   "2024_04_20": "=============== 2024-04-20 ===============",
