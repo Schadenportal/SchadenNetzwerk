@@ -25,7 +25,7 @@ const CAR_RENTAL_CONTRACT_URL = "https://firebasestorage.googleapis.com/v0/b/sch
 // eslint-disable-next-line max-len
 export const CONTRACT_FILE_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FAnlage_Datenschutz.pdf?alt=media&token=864a4508-09e0-466b-b079-32befda51af7";
 // eslint-disable-next-line max-len
-const COMMISSION_CONTRACT_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FPreisvereinbarung.pdf?alt=media&token=0bfd425c-d0e9-4b5b-9374-012117749b3f";
+const COMMISSION_CONTRACT_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FPreisvereinbarung_updated_file.pdf?alt=media&token=c642c084-c1e0-48b5-be36-c08de85b6188";
 // eslint-disable-next-line max-len
 export const PRICE_LIST_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FHonorar_Gutachter_neutral.pdf?alt=media&token=3c5b6e42-fd1b-424b-9811-b4b872b08fed";
 // eslint-disable-next-line max-len
@@ -474,6 +474,7 @@ export const generateCommissionContractPdf = async (info: Record<string, any>) =
     const dealerNameAndAddress = `${name}, ${info.street}, ${info.postalCode} ${info.city}`;
     const commission = info.commission ? String(info.commission) : "";
     const setupFee = info.setupFee ? String(info.setupFee) : "";
+    const monthlyBaseFee = info.monthlyBaseFee ? String(info.monthlyBaseFee) : "";
     const adminTownAndTime = `${dayjs(new Date()).format("DD.MM.YYYY")}, Wermelskirchen`;
     const dealerTownAndTime = `${dayjs(new Date()).format("DD.MM.YYYY")}, ${info.city}`;
 
@@ -489,6 +490,7 @@ export const generateCommissionContractPdf = async (info: Record<string, any>) =
     // Draw Commission Info
     page4.drawText(commission, { x: 72, y: 590, size: 10, lineHeight: 12, font: customFont });
     page4.drawText(setupFee, { x: 72, y: 548, size: 10, lineHeight: 12, font: customFont });
+    page4.drawText(monthlyBaseFee, { x: 72, y: 508, size: 10, lineHeight: 12, font: customFont });
     // Draw Date and Town
     page5.drawText(adminTownAndTime, { x: 70, y: 665, size: 10, lineHeight: 12, font: customFont });
     page5.drawText(dealerTownAndTime, { x: 118, y: 565, size: 10, lineHeight: 12, font: customFont });
