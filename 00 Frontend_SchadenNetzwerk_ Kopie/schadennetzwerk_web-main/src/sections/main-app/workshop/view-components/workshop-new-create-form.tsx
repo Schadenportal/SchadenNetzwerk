@@ -60,6 +60,7 @@ export default function WorkshopNewEditForm({ currentWorkshop }: Props) {
     }),
     commission: Yup.number(),
     setupFee: Yup.number(),
+    monthlyBaseFee: Yup.number(),
   });
 
   const defaultValues = useMemo(
@@ -79,6 +80,7 @@ export default function WorkshopNewEditForm({ currentWorkshop }: Props) {
       },
       commission: currentWorkshop?.commission || 0,
       setupFee: currentWorkshop?.setupFee || 0,
+      monthlyBaseFee: currentWorkshop?.monthlyBaseFee || 0,
     }),
     [currentWorkshop]
   );
@@ -188,6 +190,7 @@ export default function WorkshopNewEditForm({ currentWorkshop }: Props) {
             >
               <RHFTextField type="number" name="commission" label={t('commission')} />
               <RHFTextField type="number" name="setupFee" label={t('setup_fee')} />
+              <RHFTextField type="number" name="monthlyBaseFee" label={t('monthlybasefee')} />
             </Box>
             <Divider sx={{ borderStyle: 'dashed', my: 3 }} />
             <Box

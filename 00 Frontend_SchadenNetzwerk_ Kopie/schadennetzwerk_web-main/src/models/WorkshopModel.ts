@@ -30,6 +30,8 @@ class WorkshopModel {
   commission: number;
 
   setupFee: number;
+  
+  monthlyBaseFee: number;
 
   createdAt: Timestamp;
 
@@ -46,6 +48,7 @@ class WorkshopModel {
     this.otherEmails = data.otherEmails as OtherEmailType;
     this.commission = data.commission as number;
     this.setupFee = data.setupFee as number || 0; // Default to 0 if not provided
+    this.monthlyBaseFee = data.monthlyBaseFee as number || 0; // Default to 0 if not provided
     this.createdAt = data.createdAt as Timestamp;
 
     Object.freeze(this);
