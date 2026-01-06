@@ -18,6 +18,7 @@ export const createWorkshopModel = Joi.object({
   }),
   "commission": Joi.number().optional().default(0),
   "setupFee": Joi.number().optional().default(0),
+  "monthlyBaseFee": Joi.number().optional().default(0),
 });
 
 export type ICreateWorkshopModel = Joi.extractType<typeof createWorkshopModel>;
