@@ -32,6 +32,7 @@ import { CONTRACT_FILE_URL, generateCommissionContractPdf } from "../services/pd
 import dayjs from "dayjs";
 import { makeCommissionContractSignatureFile } from "../services/scriveHandler";
 import { sendMailgunEmail } from "../services/emailSender";
+const WHITE_PAPER_PDF_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FWhitepaper_Final_03_01.pdf?alt=media&token=fb3dfafb-67e2-4478-9fdc-a8151673a60e";
 
 export const removeWorkshop = onCall(
   { region: "europe-west3" },
@@ -184,6 +185,13 @@ export const handleWorkshopInfo = onCall(
             "Provisionsverbeinbarung zur digitalen Unterzeichnung",
             CONTRACT_CONFIRMATION_EMAIL,
             { data: contractFiles },
+            "",
+            [
+              {
+                filename: "White_Paper.pdf",
+                url: WHITE_PAPER_PDF_URL, // must be a public or signed PDF URL
+              },
+            ]
           );
         }
       }

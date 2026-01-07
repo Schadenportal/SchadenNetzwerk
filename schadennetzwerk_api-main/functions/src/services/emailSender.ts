@@ -60,17 +60,22 @@ export const sendMailgunEmail = async (
     "h:X-Mailgun-Variables": JSON.stringify(variables),
     "h:Reply-To": replyTo,
   };
-  if (attachedFiles) {
-    // Promise async/await for file download
-    const files: fs.ReadStream[] = [];
+  if (attachedFiles && attachedFiles.length) {
+    const attachments: any[] = [];
+
     await Promise.all(attachedFiles.map(async (file) => {
       const tempFilePath = path.join(os.tmpdir(), file.filename);
       await downloadFile(file.url, tempFilePath);
-      files.push(fs.createReadStream(tempFilePath));
-      // data.attachment.push(fs.createReadStream(tempFilePath));
+
+      attachments.push({
+        filename: file.filename,
+        data: fs.createReadStream(tempFilePath),
+      });
     }));
-    data.attachment = files;
+
+    data.attachment = attachments;
   }
+
   await mg.messages.create(mailDomain, data)
     .then((msg) => {
       logger.info("=====Email Sending Result=====", msg);
