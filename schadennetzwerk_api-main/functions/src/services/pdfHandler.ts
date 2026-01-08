@@ -33,7 +33,8 @@ export const CANCEL_DOC_URL = "https://firebasestorage.googleapis.com/v0/b/schad
 // eslint-disable-next-line max-len
 const PAINT_SHOP_PDF_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FLacker_PDF.pdf?alt=media&token=4d0f57e6-2e90-4f68-9a9f-b626545c0852";
 const fontUrl = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/assets%2FRoboto-Regular.ttf?alt=media&token=46d83b92-f7ff-4af5-954c-2fcdb8ccb64d";
-
+export const AVV_TEMPLATE_URL =
+  "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FAVV_FINALE_01_26.pdf?alt=media&token=ba66c4fc-4346-44f0-8c5a-d777b1048ad8";
 export const generateRepairSchedulePdf = async (damageInfo: Record<string, any>, planValues?: ICreateRepairPlanModel) => {
   try {
     const existingPdfBytes = await fetch(RSP_URL).then((res) => res.arrayBuffer());
@@ -504,6 +505,78 @@ export const generateCommissionContractPdf = async (info: Record<string, any>) =
     return null;
   }
 };
+export const generateAvvPdf = async (info: Record<string, any>) => {
+  try {
+    logger.info("AVV PDF: start", { structuredData: true, info });
+
+    logger.info("AVV PDF: fetching template", { url: AVV_TEMPLATE_URL });
+    const existingPdfBytes = await fetch(AVV_TEMPLATE_URL).then((res) => res.arrayBuffer());
+    logger.info("AVV PDF: template fetched, bytes =", existingPdfBytes.byteLength);
+
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    logger.info("AVV PDF: pdf loaded");
+
+    const name =
+      info.firstName && info.lastName ? `${info.firstName} ${info.lastName}` : info.name;
+    const address = `${info.street}, ${info.postalCode} ${info.city}`;
+
+    logger.info("AVV PDF: text prepared", { name, address });
+
+    pdfDoc.registerFontkit(fontkit);
+
+    logger.info("AVV PDF: fetching font", { fontUrl });
+    const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
+    logger.info("AVV PDF: font fetched, bytes =", fontBytes.byteLength);
+
+    const customFont = await pdfDoc.embedFont(fontBytes);
+    logger.info("AVV PDF: font embedded");
+
+    const pages = pdfDoc.getPages();
+    logger.info("AVV PDF: page count", pages.length);
+
+    const page1 = pages[0];
+    const page10 = pages[9];
+
+    if (!page1 || !page10) {
+      logger.error("AVV PDF: required pages missing", {
+        hasPage1: !!page1,
+        hasPage10: !!page10,
+      });
+      return null;
+    }
+
+    logger.info("AVV PDF: drawing text on page 1");
+    page1.drawText(name, {
+      x: 390,
+      y: 345,
+      size: 10,
+      lineHeight: 12,
+      font: customFont,
+    });
+
+    page1.drawText(address, {
+      x: 370,
+      y: 305,
+      size: 10,
+      lineHeight: 12,
+      font: customFont,
+    });
+
+
+    logger.info("AVV PDF: drawing text on page 10");
+    page10.drawText(name, { x: 135, y: 565, size: 10, lineHeight: 12, font: customFont });
+    page10.drawText(address, { x: 110, y: 545, size: 10, lineHeight: 12, font: customFont });
+
+    const pdfBytes = await pdfDoc.save();
+    logger.info("AVV PDF: save successful, size =", pdfBytes.length);
+
+    return Buffer.from(pdfBytes);
+  } catch (error) {
+    logger.error("AVV PDF: FAILED", error);
+    return null;
+  }
+};
+
 
 export const generatePaintShopPdf = async (damageInfo: Record<string, any>) => {
   try {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { logger } from "firebase-functions/v1";
 import FormData = require("form-data");
 import { bucket, contractDocCollection, damageCollection, getDocumentInfo, getFBDocumentWithParam, signingDocCollection } from "../views/config";
-import { COLLECTION_DAMAGE, COLLECTION_SERVICE_PROVIDERS, COLLECTION_WORKSHOPS, commissionContractDocPlacement } from "../constants";
+import { avvDocPlacement, COLLECTION_DAMAGE, COLLECTION_SERVICE_PROVIDERS, COLLECTION_WORKSHOPS, commissionContractDocPlacement } from "../constants";
 import { getScriveDocPlacement } from "../utils/functionUtils";
 import { FieldValue } from "firebase-admin/firestore";
 import { getDownloadURL } from "firebase-admin/storage";
@@ -41,6 +41,33 @@ export const makeCommissionContractSignatureFile = async (
     return null;
   }
 };
+export const makeAvvSignatureFile = async (
+  workshopId: string,
+  type: ContractDocTypes,
+  file: Buffer,
+  fileName: string,
+  name: string,
+  email: string,
+  phone: string
+) => {
+  try {
+    const docId: string = await initializeDocument(file, fileName);
+    await addSignatoryDataForAvvContract(docId, name, email, phone);
+    const parties = await startSigning(docId);
+
+    if (parties?.length) {
+      const signingParty: any = parties.find((it: any) => it.signatory_role === "signing_party");
+      await saveContractData(workshopId, type, signingParty.api_delivery_url, docId, fileName);
+      return signingParty.api_delivery_url as string;
+    }
+
+    return null;
+  } catch (error) {
+    logger.debug("makeAvvSignatureFile error:", error);
+    return null;
+  }
+};
+
 
 export const makeSignatureFile = async (
   damageInfo: Record<string, any>,
@@ -358,4 +385,57 @@ const saveDocumentData = async (
     deletedAt: null,
   };
   await docRef.set(dbData, { merge: true });
+};
+export const addSignatoryDataForAvvContract = async (
+  docId: string,
+  name: string,
+  signerEmail: string,
+  signerPhone: string
+) => {
+  // Make params
+  const params =
+  {
+    document:
+      JSON.stringify({
+        id: docId,
+        parties: [
+          {},
+          {
+            signatory_role: "signing_party",
+            delivery_method: "api",
+            fields: [
+              { type: "name", order: 1, value: name },
+              { type: "name", order: 2, value: name },
+              { type: "email", value: signerEmail },
+              { type: "mobile", value: signerPhone },
+              ...avvDocPlacement,
+            ],
+          },
+          {
+            signatory_role: "viewer",
+            delivery_method: "api",
+            is_author: true,
+            fields: [
+              { type: "email", value: adminEmail },
+              { type: "mobile", value: adminPhone },
+            ],
+          },
+        ],
+        api_callback_url: apiCallbackUrl,
+      }),
+    document_id: docId,
+  };
+  // Make API call
+  const headers = {
+    ...defaultHeader,
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+  await axios.post(`${process.env.SCRIVE_API_URL}/documents/${docId}/update`, params, { headers })
+    .then((res) => {
+      logger.info("===Updating doc result===", res.data);
+    })
+    .catch((err) => {
+      logger.debug("==Updating Error==", err);
+      throw err;
+    });
 };

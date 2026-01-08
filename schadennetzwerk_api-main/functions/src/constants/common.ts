@@ -198,6 +198,25 @@ export const commissionContractDocPlacement = [
     description: "Unterschrift hier",
   },
 ];
+export const avvDocPlacement = [
+  {
+    type: "signature",
+    name: "signature 1",
+    placements: [
+      {
+        "xrel": 0.1,
+        "yrel": 0.65,
+        "wrel": 0.2672396850585937,
+        "hrel": 7.60769447826878e-2,
+        "fsrel": 1.6842105263157894e-2,
+        "page": 16,
+        "tip": "left",
+        "anchors": [],
+      },
+    ],
+    description: "Unterschrift hier",
+  },
+];
 
 export const CostEstimationFileKeys = [
   "frontImages",

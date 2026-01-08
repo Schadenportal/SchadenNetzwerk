@@ -128,6 +128,7 @@ export enum ContractDocTypes {
   APPRAISER_COMMISSION_CONTRACT = "appraiser_commission",
   WORKSHOP_COMMISSION_CONTRACT = "workshop_commission",
   AGENT_COMMISSION_CONTRACT = "agent_commission",
+  WORKSHOP_AVV = "WORKSHOP_AVV",
 }
 
 export enum FileCategories {

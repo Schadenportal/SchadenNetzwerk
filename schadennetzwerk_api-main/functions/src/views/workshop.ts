@@ -28,9 +28,9 @@ import { ContractDocTypes, QueryResultType } from "../types/enums";
 import { getAuth } from "firebase-admin/auth";
 import { updateUserBasicInfo } from "./eventTriggers";
 import { checkAuthIsUsed, getFilePathFromUrl, modifyFileName } from "../utils/functionUtils";
-import { CONTRACT_FILE_URL, generateCommissionContractPdf } from "../services/pdfHandler";
+import { CONTRACT_FILE_URL, generateAvvPdf, generateCommissionContractPdf } from "../services/pdfHandler";
 import dayjs from "dayjs";
-import { makeCommissionContractSignatureFile } from "../services/scriveHandler";
+import { makeAvvSignatureFile, makeCommissionContractSignatureFile } from "../services/scriveHandler";
 import { sendMailgunEmail } from "../services/emailSender";
 const WHITE_PAPER_PDF_URL = "https://firebasestorage.googleapis.com/v0/b/schadennetzwerk-7dc39.appspot.com/o/pdf_sample%2FWhitepaper_Final_03_01.pdf?alt=media&token=fb3dfafb-67e2-4478-9fdc-a8151673a60e";
 
@@ -176,6 +176,37 @@ export const handleWorkshopInfo = onCall(
             workshopInfo.phone);
           if (commissionContractUrl) {
             contractFiles.push({ doc_name: "Provisionsvereinbarung(Commission Agreement)", doc_url: `${SCRIVE_BASE_URL}${commissionContractUrl}` });
+          }
+        }
+        const avvBuffer = await generateAvvPdf({
+          name: workshopInfo.name,
+          street: workshopInfo.street,
+          postalCode: workshopInfo.postalCode,
+          city: workshopInfo.city,
+          country: "Deutschland",
+        });
+
+        if (avvBuffer) {
+          const avvFileName =
+            `avv_${dayjs().format("YYYYMMDDHHmmss")}_${modifyFileName(workshopInfo.name)}.pdf`;
+
+          // 2) Send to Scrive for signing (signature placement on page 16)
+          const avvSigningUrl = await makeAvvSignatureFile(
+            data.workshopId,
+            ContractDocTypes.WORKSHOP_AVV,
+            avvBuffer,
+            avvFileName,
+            workshopInfo.name,
+            workshopInfo.email,
+            workshopInfo.phone
+          );
+
+          // 3) Add link into email list (like commission)
+          if (avvSigningUrl) {
+            contractFiles.push({
+              doc_name: "Auftragsverarbeitungsvertrag (AVV) zur digitalen Unterzeichnung",
+              doc_url: `${SCRIVE_BASE_URL}${avvSigningUrl}`,
+            });
           }
         }
         // Send contract and commission email
